@@ -35,8 +35,6 @@ export interface ChangeGridColumnsStateEvent extends OpenAPIRendererEvent {
     };
 }
 
-export interface ChangeOpenAPIModeStateEvent extends OpenAPIRendererEvent {}
-
 export interface UpdateOpenAPIViewStateEvent extends OpenAPIRendererEvent {
     data: {
         file: string;

@@ -212,7 +212,7 @@ export class SourceUtils {
     static setupEventListeners(controller: SourceController): void {
         const { settings } = controller.editor.plugin;
         controller.editor.view.app.workspace.on('css-change', () => {
-            if (settings.synchronizeOpenAPISourceTheme) {
+            if (settings.syncOpenAPISourceTheme) {
                 controller.editor.controller.themeManager.syncWithObsidian();
             }
         });
@@ -221,7 +221,7 @@ export class SourceUtils {
             controller.editor.view.plugin.app.workspace,
             eventID.SourceThemeState,
             async () => {
-                if (settings.synchronizeOpenAPISourceTheme) {
+                if (settings.syncOpenAPISourceTheme) {
                     controller.themeManager.syncWithObsidian();
                 } else {
                     const mode = settings.OpenAPISourceThemeMode;

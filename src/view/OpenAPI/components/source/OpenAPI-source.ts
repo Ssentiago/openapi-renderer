@@ -1,7 +1,7 @@
 import { LanguageSupport } from '@codemirror/language';
 import { Extension } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
-import OpenAPIRendererPlugin from 'core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from 'core/openapi-renderer-plugin';
 import { OpenAPIView } from 'view/OpenAPI/OpenAPI-view';
 import { IOpenAPIViewComponent } from '../../../typing/interfaces';
 import { SourceController } from './controllers/source-controller';

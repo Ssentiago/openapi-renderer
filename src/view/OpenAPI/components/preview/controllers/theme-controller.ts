@@ -6,10 +6,7 @@ export class ThemeController {
     constructor(public controller: OpenAPIPreviewController) {}
 
     initializeTheme(): void {
-        if (
-            this.controller.preview.plugin.settings
-                .synchronizeOpenAPIPreviewTheme
-        ) {
+        if (this.controller.preview.plugin.settings.syncOpenAPIPreviewTheme) {
             this.toggleThemeFollowObsidian();
         } else {
             const { settings } = this.controller.preview.plugin;

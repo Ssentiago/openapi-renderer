@@ -1,5 +1,5 @@
 import React from 'react';
-import { EntryViewData } from '../../../indexedDB/interfaces';
+import { EntryViewData } from 'indexedDB/typing/interfaces';
 import { OpenAPIEntryView } from '../OpenAPI-entry-view';
 import { EntryProvider } from './core/context';
 import EntryViewComponent from './entry-view/entry-view-component';

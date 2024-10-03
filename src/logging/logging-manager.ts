@@ -1,18 +1,18 @@
 import * as fs from 'fs';
+import { moment } from 'obsidian';
 import * as path from 'path';
-import OpenAPIPluginContext from '../core/contextManager';
+import OpenAPIRendererPlugin from '../core/openapi-renderer-plugin';
+import os from 'os';
 
-export default class OpenAPIRendererPluginLogger {
-    appContext;
+export default class LoggingManager {
     private maxFileSize = 1024 * 1024; // Maximum log file size in bytes (1 MB)
     private readonly logDir;
 
-    constructor(appContext: OpenAPIPluginContext) {
-        this.appContext = appContext;
-        const pluginDir = this.appContext.plugin.manifest.dir;
+    constructor(public plugin: OpenAPIRendererPlugin) {
+        const pluginDir = this.plugin.manifest.dir;
         if (pluginDir) {
             this.logDir = path.join(
-                this.appContext.app.vault.adapter.basePath,
+                this.plugin.app.vault.adapter.basePath,
                 pluginDir,
                 'logs'
             );
@@ -22,6 +22,9 @@ export default class OpenAPIRendererPluginLogger {
         }
     }
 
+    /**
+     * Checks if the log directory exists and creates it if it does not.
+     */
     private ensureLogDirExists(): void {
         fs.access(this.logDir, fs.constants.F_OK, (err) => {
             if (err) {
@@ -35,18 +38,24 @@ export default class OpenAPIRendererPluginLogger {
     }
 
     /**
-     * Rotates the log file by creating a new file with a timestamped name and moving the existing log file to it.
-     * This function is used to manage the size of the log file and prevent it from growing indefinitely.
+     * Gets the path to the log file.
      *
-     * @returns void
+     * @returns The path to the log file.
      */
-    private getLogFilePath(): string {
-        return path.join(this.logDir, 'logs.txt');
+    private get logFilePath(): string {
+        return path.join(this.logDir, 'logs.log');
     }
 
+    /**
+     * Renames the current log file to include the current timestamp.
+     *
+     * The file is renamed to "logs_<timestamp>.txt" where <timestamp> is the
+     * current timestamp in the format "YYYYMMDDHHmmss".
+     */
     private rotateLogs(): void {
-        const logPath = this.getLogFilePath();
-        const rotatedLogPath = path.join(this.logDir, `logs_${Date.now()}.txt`);
+        const logPath = this.logFilePath;
+        const timestamp = moment().format('YYYYMMDDHHmmss');
+        const rotatedLogPath = path.join(this.logDir, `logs_${timestamp}.txt`);
 
         fs.rename(logPath, rotatedLogPath, (err) => {
             if (err) {
@@ -58,20 +67,31 @@ export default class OpenAPIRendererPluginLogger {
     /**
      * Writes a log entry to the log file.
      *
-     * @param level - The severity level of the log entry.
-     * @param message - The message to be logged.
-     * @param context - Additional contextual information for the log entry.
+     * @param level The log level (e.g. "debug", "info", "warn", "error").
+     * @param message The log message.
      */
-    private log(level: string, message: string, context = {}): void {
+    private log(level: string, message: string): void {
+        const err = new Error();
+        const stackLines = err.stack?.split('\n');
+
+        const filteredStack = [
+            ...stackLines!.slice(0, 1),
+            ...stackLines!.slice(3),
+        ].join('\n');
+
         const logEntry = {
-            timestamp: new Date().toLocaleString('ru'),
+            timestamp: new Date().toISOString(),
             level: level,
             message: message,
-            context: { ...context },
+            context: filteredStack,
+            system: {
+                platform: os.platform(),
+                release: os.release(),
+                arch: os.arch(),
+            },
         };
-        ``;
-        const logMessage = `${JSON.stringify(logEntry)}\n`;
-        const logPath = this.getLogFilePath();
+        const logMessage = `${JSON.stringify(logEntry, null, 2)}\n`;
+        const logPath = this.logFilePath;
 
         fs.access(logPath, fs.constants.F_OK, (err) => {
             if (err) {
@@ -113,19 +133,39 @@ export default class OpenAPIRendererPluginLogger {
         });
     }
 
-    info(message: string, context = {}): void {
-        this.log('INFO', message, context);
+    /**
+     * Writes a DEBUG level log entry.
+     *
+     * @param message The log message.
+     */
+    debug(message: string): void {
+        this.log('DEBUG', message);
     }
 
-    error(message: string, context = {}): void {
-        this.log('ERROR', message, context);
+    /**
+     * Writes an INFO level log entry.
+     *
+     * @param message The log message.
+     */
+    info(message: string): void {
+        this.log('INFO', message);
     }
 
-    warn(message: string, context = {}): void {
-        this.log('WARNING', message, context);
+    /**
+     * Writes a WARNING level log entry.
+     *
+     * @param message The log message.
+     */
+    warn(message: string): void {
+        this.log('WARNING', message);
     }
 
-    debug(message: string, context = {}): void {
-        this.log('DEBUG', message, context);
+    /**
+     * Writes an ERROR level log entry.
+     *
+     * @param message The log message.
+     */
+    error(message: string): void {
+        this.log('ERROR', message);
     }
 }

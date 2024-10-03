@@ -1,9 +1,12 @@
-import { WorkerHelper } from 'indexedDB/helper';
-import { EntryViewData, MessageType, ResponseType } from 'indexedDB/interfaces';
+import { WorkerHelper } from 'indexedDB/worker/helper';
 import {
-    Specification,
+    EntryViewData,
+    MessageType,
+    ResponseType,
     SpecParams,
-} from '../../../indexedDB/database/specification';
+} from 'indexedDB/typing/interfaces';
+import { Specification } from '../../../indexedDB/database/specification';
+
 import { OpenAPIEntryView } from '../OpenAPI-entry-view';
 
 export class EntryController {

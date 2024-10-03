@@ -24,6 +24,7 @@ export const NavbarTab = styled.button`
     color: var(--text-normal);
     font-size: 16px;
     padding: 8px 12px;
+    gap: 10px;
     border-radius: 4px;
     transition:
         background-color 0.3s,
@@ -44,21 +45,11 @@ export const NavbarTab = styled.button`
     &.active::after {
         content: '';
         position: absolute;
-        bottom: -2px; // Положение полоски под вкладкой
+        bottom: -2px;
         left: 0;
         right: 0;
-        height: 3px; // Толщина полоски
-        background-color: var(--text-accent); // Цвет полоски
+        height: 3px;
+        background-color: var(--text-accent);
         border-radius: 2px 2px 0 0;
-    }
-`;
-
-export const TabIcon = styled.div`
-    margin-right: 8px;
-    font-size: 20px;
-    color: var(--text-normal);
-
-    svg {
-        fill: currentColor;
     }
 `;

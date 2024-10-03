@@ -1,10 +1,12 @@
+import { Specification } from '../../../indexedDB/database/specification';
 import { OpenAPIVersionView } from '../openapi-version-view';
-import { MessageType, ResponseType } from '../../../indexedDB/interfaces';
 import {
-    Specification,
+    MessageType,
+    ResponseType,
     SpecParams,
-} from '../../../indexedDB/database/specification';
-import { WorkerHelper } from '../../../indexedDB/helper';
+} from '../../../indexedDB/typing/interfaces';
+
+import { WorkerHelper } from '../../../indexedDB/worker/helper';
 import { ThemeController } from './theme-controller';
 import { VersionUtils } from './versionUtils';
 import jsyaml from 'js-yaml';

@@ -1,13 +1,25 @@
 import { App, Setting } from 'obsidian';
 import React, { useEffect } from 'react';
-import OpenAPIRendererPlugin from '../../../core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from '../../../core/openapi-renderer-plugin';
 import { eventID } from '../../../events-management/typing/constants';
 import { SettingsTabStateEvent } from '../../../events-management/typing/interfaces';
-import SettingsUtils from '../../utils';
-import { SettingsContainer } from '../container-styled-component';
 import { useSettingsContext } from '../core/context';
+import { SettingsContainer } from '../styled/container-styled';
 
-const GeneralSectionComponent: React.FC<{
+/**
+ * A React component that renders the General settings section.
+ *
+ * This component renders several settings:
+ *  - Reset settings to default
+ *  - Download plugin`s assets from Github release
+ *  - Resources autoupdate
+ *
+ * @param {App} app - The Obsidian app instance.
+ * @param {OpenAPIRendererPlugin} plugin - The OpenAPI Renderer plugin instance.
+ *
+ * @returns {React.ReactElement} A React element.
+ */
+const GeneralSection: React.FC<{
     app: App;
     plugin: OpenAPIRendererPlugin;
 }> = ({ app, plugin }) => {
@@ -16,12 +28,12 @@ const GeneralSectionComponent: React.FC<{
     useEffect(() => {
         if (ref.current) {
             const containerEl = ref.current as HTMLElement;
-            const utils = new SettingsUtils(app, plugin, plugin.publisher);
 
             new Setting(containerEl)
                 .setName('Reset settings to default')
                 .addButton((button) => {
-                    button.setIcon('refresh-ccw').onClick(async () => {
+                    button.setIcon('refresh-ccw');
+                    button.onClick(async () => {
                         try {
                             await plugin.settingsManager.resetSettings();
                             plugin.showNotice(
@@ -36,7 +48,7 @@ const GeneralSectionComponent: React.FC<{
                             }, 100);
                         } catch (e: any) {
                             plugin.showNotice(
-                                'Something went wrong. Maybe check the logs?'
+                                'Oops... something went wrong. Please check the logs for more info'
                             );
                             plugin.logger.error(e.message);
                         }
@@ -60,9 +72,9 @@ const GeneralSectionComponent: React.FC<{
                 )
                 .addToggle((toggle) => {
                     toggle
-                        .setValue(plugin.settings.isResourcesAutoUpdate)
+                        .setValue(plugin.settings.resourcesAutoUpdate)
                         .onChange(async (value) => {
-                            plugin.settings.isResourcesAutoUpdate = value;
+                            plugin.settings.resourcesAutoUpdate = value;
                             await plugin.settingsManager.saveSettings();
                         });
                 });
@@ -70,8 +82,8 @@ const GeneralSectionComponent: React.FC<{
     }, [ref]);
 
     return (
-        <SettingsContainer className={'openapi-renderer-settings'} ref={ref} />
+        <SettingsContainer className="openapi-renderer-settings" ref={ref} />
     );
 };
 
-export default GeneralSectionComponent;
+export default GeneralSection;

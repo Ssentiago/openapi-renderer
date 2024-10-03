@@ -23,9 +23,7 @@ export class ThemeController {
     }
 
     initializeTheme(): void {
-        if (
-            this.controller.editor.plugin.settings.synchronizeOpenAPISourceTheme
-        ) {
+        if (this.controller.editor.plugin.settings.syncOpenAPISourceTheme) {
             this.toggleThemeFollowObsidian();
         } else {
             const { settings } = this.controller.editor.plugin;

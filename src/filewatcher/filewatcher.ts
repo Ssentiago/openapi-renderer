@@ -1,9 +1,9 @@
 import { TAbstractFile } from 'obsidian';
-import OpenAPIRendererPlugin from '../core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from '../core/openapi-renderer-plugin';
 import { eventID } from '../events-management/typing/constants';
 import { ReloadOpenAPIEntryStateEvent } from '../events-management/typing/interfaces';
-import { WorkerHelper } from '../indexedDB/helper';
-import { MessageType } from '../indexedDB/interfaces';
+import { WorkerHelper } from '../indexedDB/worker/helper';
+import { MessageType } from '../indexedDB/typing/interfaces';
 
 export class FileWatcher {
     helper: WorkerHelper;
@@ -13,6 +13,12 @@ export class FileWatcher {
         this.startWatching();
     }
 
+    /**
+     * This method starts watching the file system for file rename events.
+     * When a rename event is detected, it checks if the renamed file is tracked
+     * by the plugin. If it is, it sends a message to the worker to rename the
+     * file in the database and triggers a reload of the openapi entry state.
+     */
     startWatching(): void {
         this.plugin.app.vault.on(
             'rename',

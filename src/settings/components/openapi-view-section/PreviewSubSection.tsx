@@ -1,10 +1,23 @@
 import { App, DropdownComponent, Setting } from 'obsidian';
 import React, { useEffect } from 'react';
-import OpenAPIRendererPlugin from '../../../core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from '../../../core/openapi-renderer-plugin';
 import { eventID } from '../../../events-management/typing/constants';
 import { OpenAPIPreviewThemeStateEvent } from '../../../events-management/typing/interfaces';
 
-const PreviewSectionComponent: React.FC<{
+/**
+ * A React component that renders the preview settings section.
+ *
+ * This component renders several settings:
+ *  - Preview theme mode
+ *  - Synchronize preview theme
+ *
+ * @param {App} app - The Obsidian app instance.
+ * @param {OpenAPIRendererPlugin} plugin - The OpenAPI Renderer plugin instance.
+ * @param {HTMLElement | null} containerEl - The container element to render the settings in.
+ *
+ * @returns {React.ReactElement} A React element.
+ */
+const PreviewSubSection: React.FC<{
     app: App;
     plugin: OpenAPIRendererPlugin;
     containerEl: HTMLElement | null;
@@ -12,8 +25,8 @@ const PreviewSectionComponent: React.FC<{
     useEffect(() => {
         if (containerEl) {
             new Setting(containerEl)
-                .setName('OpenAPI preview theme mode')
-                .setDesc('Select the theme mode for OpenAPI preview')
+                .setName('Preview theme mode')
+                .setDesc('Select the theme mode for preview')
                 .addDropdown((dropdown: DropdownComponent) =>
                     dropdown
                         .addOptions({
@@ -33,18 +46,15 @@ const PreviewSectionComponent: React.FC<{
                 );
 
             new Setting(containerEl)
-                .setName('Synchronize OpenAPI preview theme')
+                .setName('Synchronize preview theme')
                 .setDesc(
-                    'Synchronize OpenAPI preview theme mode with Obsidian theme mode'
+                    'Synchronize preview theme mode with Obsidian theme mode'
                 )
                 .addToggle((toggle) =>
                     toggle
-                        .setValue(
-                            plugin.settings.synchronizeOpenAPIPreviewTheme
-                        )
+                        .setValue(plugin.settings.syncOpenAPIPreviewTheme)
                         .onChange(async (value) => {
-                            plugin.settings.synchronizeOpenAPIPreviewTheme =
-                                value;
+                            plugin.settings.syncOpenAPIPreviewTheme = value;
                             await plugin.settingsManager.saveSettings();
                             plugin.publisher.publish({
                                 eventID: eventID.PreviewThemeState,
@@ -59,4 +69,4 @@ const PreviewSectionComponent: React.FC<{
     return null;
 };
 
-export default PreviewSectionComponent;
+export default PreviewSubSection;

@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { EntryViewData } from '../../../../indexedDB/interfaces';
+import { EntryViewData } from 'indexedDB/typing/interfaces';
 
 interface EntryContextProps {
     specData: EntryViewData;

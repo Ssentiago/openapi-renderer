@@ -1,47 +1,38 @@
 import React from 'react';
 import { FaBook, FaCog, FaEye } from 'react-icons/fa';
-
 import { useSettingsContext } from '../core/context';
-import {
-    NavbarContainer,
-    NavbarTab,
-    NavbarTabs,
-    TabIcon,
-} from './navbar-styled-components';
+import { NavbarContainer, NavbarTab, NavbarTabs } from './styled';
 
+/**
+ * The settings page navbar.
+ *
+ * @returns {ReactElement} The navbar component.
+ */
 const Navbar: React.FC = () => {
     const { currentTab, setCurrentTab } = useSettingsContext();
-
-    const handleTabCluck = (tab: string): void => {
-        setCurrentTab(tab);
-    };
 
     return (
         <NavbarContainer>
             <NavbarTabs>
                 <NavbarTab
                     className={currentTab === 'general' ? 'active' : ''}
-                    onClick={() => handleTabCluck('general')}
+                    onClick={() => setCurrentTab('general')}
                 >
-                    <TabIcon>
-                        <FaCog />
-                    </TabIcon>
+                    <FaCog />
                     General
                 </NavbarTab>
                 <NavbarTab
                     className={currentTab === 'openapi-view' ? 'active' : ''}
-                    onClick={() => handleTabCluck('openapi-view')}
+                    onClick={() => setCurrentTab('openapi-view')}
                 >
-                    <TabIcon>
-                        <FaEye />
-                    </TabIcon>
+                    <FaEye />
                     OpenAPI View
                 </NavbarTab>
                 {/*<NavbarTab*/}
                 {/*    className={*/}
                 {/*        currentTab === 'openapi-version-view' ? 'active' : ''*/}
                 {/*    }*/}
-                {/*    onClick={() => handleTabCluck('openapi-version-view')}*/}
+                {/*    onClick={() => handleTabClick('openapi-version-view')}*/}
                 {/*>*/}
                 {/*    <TabIcon>*/}
                 {/*        <PiGitDiff />*/}
@@ -52,11 +43,9 @@ const Navbar: React.FC = () => {
                     className={
                         currentTab === 'openapi-entry-view' ? 'active' : ''
                     }
-                    onClick={() => handleTabCluck('openapi-entry-view')}
+                    onClick={() => setCurrentTab('openapi-entry-view')}
                 >
-                    <TabIcon>
-                        <FaBook />
-                    </TabIcon>
+                    <FaBook />
                     OpenAPI Entry View
                 </NavbarTab>
             </NavbarTabs>

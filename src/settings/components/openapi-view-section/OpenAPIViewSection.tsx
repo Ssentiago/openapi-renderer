@@ -1,13 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
 import { App } from 'obsidian';
-import OpenAPIRendererPlugin from '../../../core/OpenAPIRendererPlugin';
-import PreviewSectionComponent from './preview-section-component';
-import SourceSectionComponent from './source-section-component';
-import { SectionHeaderContainer } from './section-header-styled-component';
-import OpenAPIViewSectionComponent from './openapi-view-section-component';
-import { SettingsContainer } from '../container-styled-component';
+import React, { useEffect, useRef, useState } from 'react';
+import OpenAPIRendererPlugin from '../../../core/openapi-renderer-plugin';
+import { SettingsContainer } from '../styled/container-styled';
+import OpenAPIViewSubSection from './OpenAPIViewSubSection';
+import PreviewSubSection from './PreviewSubSection';
+import SourceSubSection from './SourceSubSection';
+import { SectionHeaderContainer } from './styled';
 
-const OpenapiViewMainSectionComponent: React.FC<{
+/**
+ * The component that renders the OpenAPI View settings section
+ *
+ * @param app the Obsidian app instance
+ * @param plugin the OpenAPI Renderer plugin instance
+ * @returns a JSX element representing the OpenAPI View settings section
+ */
+const OpenAPIViewSection: React.FC<{
     app: App;
     plugin: OpenAPIRendererPlugin;
 }> = ({ app, plugin }) => {
@@ -27,23 +34,23 @@ const OpenapiViewMainSectionComponent: React.FC<{
         <>
             <SettingsContainer className={'openapi-renderer-settings'}>
                 <div ref={openAPIViewRef}>
-                    <OpenAPIViewSectionComponent
+                    <OpenAPIViewSubSection
                         app={app}
                         plugin={plugin}
                         containerEl={openAPIViewRef.current}
                     />
                 </div>
-                <SectionHeaderContainer>Preview mode</SectionHeaderContainer>
+                <SectionHeaderContainer>Preview</SectionHeaderContainer>
                 <div ref={previewRef}>
-                    <PreviewSectionComponent
+                    <PreviewSubSection
                         app={app}
                         plugin={plugin}
                         containerEl={previewRef.current}
                     />
                 </div>
-                <SectionHeaderContainer>Source mode</SectionHeaderContainer>
+                <SectionHeaderContainer>Source</SectionHeaderContainer>
                 <div ref={sourceRef}>
-                    <SourceSectionComponent
+                    <SourceSubSection
                         app={app}
                         plugin={plugin}
                         containerEl={sourceRef.current}
@@ -54,4 +61,4 @@ const OpenapiViewMainSectionComponent: React.FC<{
     );
 };
 
-export default OpenapiViewMainSectionComponent;
+export default OpenAPIViewSection;

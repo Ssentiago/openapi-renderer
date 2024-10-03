@@ -1,3 +1,6 @@
+.openapi-renderer-settings-page {
+    overflow-y: scroll;
+}
 
 /* General styles for the settings tab */
 .openapi-renderer-settings {

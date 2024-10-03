@@ -1,16 +1,6 @@
-import { DiffController } from '../../view/OpenAPI Version/controllers/diff-controller';
 import pako from 'pako';
-
-export interface SpecParams {
-    id: number;
-    path: string;
-    name: string;
-    diff: string | Uint8Array;
-    version: string;
-    createdAt: string;
-    softDeleted: boolean;
-    isFull: boolean;
-}
+import { DiffController } from '../../view/OpenAPI Version/controllers/diff-controller';
+import { SpecParams } from '../typing/interfaces';
 
 export class BaseSpecification {
     id: number;
@@ -113,7 +103,7 @@ export class Specification extends BaseSpecification {
             version: this.version,
             createdAt: this.createdAt,
             softDeleted: this.softDeleted,
-            isFull: false,
+            isFull: this.isFull,
         });
     }
 }

@@ -1,27 +1,21 @@
 import { Octokit } from '@octokit/rest';
-import OpenAPIPluginContext from '../core/contextManager';
-import path from 'path';
 import fs from 'fs';
-import { pipeline } from 'stream/promises';
-import { createGunzip } from 'zlib';
 import https from 'https';
+import path from 'path';
+import { pipeline } from 'stream/promises';
 import * as tar from 'tar';
+import { createGunzip } from 'zlib';
+import OpenAPIRendererPlugin from '../core/openapi-renderer-plugin';
 
-/**
- * `GithubClient` is a class that provides an interface for interacting with the GitHub API and managing release artifacts.
- * It allows downloading and extracting artifacts from the latest release on GitHub.
- */
 export default class GithubClient {
     private octokit: Octokit;
     private owner = 'Ssentiago';
-    private repo = 'openapi-renderer';
+    private repo = 'obsidian-openapi-renderer';
     private tag: string;
-    appContext: OpenAPIPluginContext;
 
-    constructor(appContext: OpenAPIPluginContext) {
-        this.appContext = appContext;
+    constructor(public plugin: OpenAPIRendererPlugin) {
         this.octokit = new Octokit();
-        this.tag = this.appContext.plugin.manifest.version;
+        this.tag = this.plugin.manifest.version;
     }
 
     /**
@@ -51,7 +45,7 @@ export default class GithubClient {
                     download_url: asset.browser_download_url,
                 }));
         } catch (error: any) {
-            this.appContext.plugin.logger.error(
+            this.plugin.logger.error(
                 `Error fetching release for tag ${this.tag}: ${error.message}`
             );
             throw error;
@@ -69,9 +63,8 @@ export default class GithubClient {
      * @throws {Error} - Throws an error if the asset cannot be found, downloaded, or extracted.
      */
     async downloadAssetsFromLatestRelease(): Promise<void> {
-        const pluginPath = this.appContext.plugin.manifest.dir;
-        const basePath =
-            this.appContext.app.vault.getRoot().vault.adapter.basePath;
+        const pluginPath = this.plugin.manifest.dir;
+        const basePath = this.plugin.app.vault.getRoot().vault.adapter.basePath;
         if (pluginPath) {
             const relativeAssetsPath = path.join(pluginPath, 'assets');
             const fullAssetsPath = path.join(basePath, relativeAssetsPath);
@@ -80,7 +73,7 @@ export default class GithubClient {
                 pluginPath,
                 'assets.tar.gz'
             );
-            await this.appContext.app.vault.adapter.mkdir(relativeAssetsPath);
+            await this.plugin.app.vault.adapter.mkdir(relativeAssetsPath);
 
             try {
                 const artefact =
@@ -94,14 +87,15 @@ export default class GithubClient {
 
                 await this.extractArchive(archivePath, fullAssetsPath);
                 fs.unlinkSync(archivePath);
-                this.appContext.plugin.showNotice(
+                this.plugin.showNotice(
                     'Plugin assets downloaded and extracted successfully.'
                 );
             } catch (err: any) {
-                this.appContext.plugin.showNotice(
-                    'Failed to download or extract plugin assets. Check logs'
+                this.plugin.showNotice(
+                    'Failed to download or extract plugin assets. ' +
+                        'Please check the logs for more info'
                 );
-                this.appContext.plugin.logger.error(err.message);
+                this.plugin.logger.error(err.message);
                 throw err;
             }
         }
@@ -188,9 +182,8 @@ export default class GithubClient {
                     fileStream
                         .pipe(extract)
                         .on('error', (tarErr) => {
-                            this.appContext.plugin.logger.error(
-                                'Tar extraction error:',
-                                tarErr
+                            this.plugin.logger.error(
+                                `Tar extraction error: ${tarErr.message}`
                             );
                             reject(tarErr);
                         })

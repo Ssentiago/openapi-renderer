@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import PluginResourceManager from '../../../../core/pluginResourceManager';
+import ResourceManager from '../../../../core/resource-manager';
 import { Specification } from '../../../../indexedDB/database/specification';
 import { OpenAPIVersionView } from '../../openapi-version-view';
 
 interface PreviewProps {
     view: OpenAPIVersionView;
     data: string;
-    resourceManager: PluginResourceManager;
+    resourceManager: ResourceManager;
     spec: Specification | string;
 }
 

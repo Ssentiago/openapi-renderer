@@ -1,4 +1,4 @@
-import OpenAPIRendererPlugin from 'core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from 'core/openapi-renderer-plugin';
 import OpenAPIPreviewController from 'view/OpenAPI/components/preview/controllers/preview-controller';
 import { OpenAPIView } from 'view/OpenAPI/OpenAPI-view';
 import { RESOURCE_NAME } from '../../../typing/constants';

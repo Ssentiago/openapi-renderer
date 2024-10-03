@@ -1,10 +1,20 @@
 import { App, Setting } from 'obsidian';
 import React, { useEffect } from 'react';
-import OpenAPIRendererPlugin from '../../../core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from '../../../core/openapi-renderer-plugin';
 import { eventID } from '../../../events-management/typing/constants';
-import { ChangeOpenAPIModeStateEvent } from '../../../events-management/typing/interfaces';
 
-const OpenAPIViewSectionComponent: React.FC<{
+/**
+ * A React component that renders the OpenAPI View settings sub-section.
+ *
+ * This component renders a settings dropdown for selecting the default mode for viewing OpenAPI View.
+ *
+ * @param {App} app - The Obsidian app instance.
+ * @param {OpenAPIRendererPlugin} plugin - The OpenAPI Renderer plugin instance.
+ * @param {HTMLElement | null} containerEl - The container element for the settings sub-section.
+ *
+ * @returns {React.ReactElement | null} A React element or null if the container element is null.
+ */
+const OpenAPIViewSubSection: React.FC<{
     app: App;
     plugin: OpenAPIRendererPlugin;
     containerEl: HTMLElement | null;
@@ -22,11 +32,6 @@ const OpenAPIViewSectionComponent: React.FC<{
                         .onChange(async (value) => {
                             plugin.settings.OpenAPIViewDefaultMode = value;
                             await plugin.settingsManager.saveSettings();
-                            plugin.publisher.publish({
-                                eventID: eventID.ChangeOpenAPIModeState,
-                                timestamp: new Date(),
-                                emitter: app.workspace,
-                            } as ChangeOpenAPIModeStateEvent);
                         });
                 });
         }
@@ -35,4 +40,4 @@ const OpenAPIViewSectionComponent: React.FC<{
     return null;
 };
 
-export default OpenAPIViewSectionComponent;
+export default OpenAPIViewSubSection;

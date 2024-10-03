@@ -1,10 +1,6 @@
 import Dexie from 'dexie';
+import { Database, EntryViewData } from '../typing/interfaces';
 import { BaseSpecification } from './specification';
-import { EntryViewData } from '../interfaces';
-
-interface Database extends Dexie {
-    spec: Dexie.Table<BaseSpecification, number>;
-}
 
 export class IndexedDB extends Dexie implements Database {
     spec: Dexie.Table<BaseSpecification, number>;
@@ -60,8 +56,8 @@ export class IndexedDB extends Dexie implements Database {
     }
 
     async isNextVersionFull(path: string): Promise<boolean> {
-        const specs = await this.spec.where('path').equals(path).toArray();
-        return (specs.length + 1) % 10 === 0;
+        const count = await this.spec.where('path').equals(path).count();
+        return count % 10 === 0;
     }
 
     async getEntryViewData(): Promise<EntryViewData> {
@@ -86,8 +82,7 @@ export class IndexedDB extends Dexie implements Database {
     }
 
     async getAllData(): Promise<Array<BaseSpecification>> {
-        const data = await this.spec.toArray();
-        return data;
+        return this.spec.toArray();
     }
 
     async renameFile(oldPath: string, newPath: string): Promise<void> {

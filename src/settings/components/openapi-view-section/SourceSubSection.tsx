@@ -1,10 +1,24 @@
 import { App, DropdownComponent, Setting } from 'obsidian';
 import React, { useEffect } from 'react';
-import OpenAPIRendererPlugin from '../../../core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from '../../../core/openapi-renderer-plugin';
 import { eventID } from '../../../events-management/typing/constants';
 import { SourceThemeStateEvent } from '../../../events-management/typing/interfaces';
 
-const SourceSectionComponent: React.FC<{
+/**
+ * A React component that renders the OpenAPI Source settings section.
+ *
+ * This component renders several settings:
+ *  - Source theme mode
+ *  - Synchronize source theme mode with Obsidian theme mode
+ *  - Source light theme
+ *  - OpenAPI source dark theme
+ *
+ * @param {App} app - The Obsidian app instance.
+ * @param {OpenAPIRendererPlugin} plugin - The OpenAPI Renderer plugin instance.
+ *
+ * @returns {React.ReactElement} A React element.
+ */
+const SourceSubSection: React.FC<{
     app: App;
     plugin: OpenAPIRendererPlugin;
     containerEl: HTMLElement | null;
@@ -12,8 +26,8 @@ const SourceSectionComponent: React.FC<{
     useEffect(() => {
         if (containerEl) {
             new Setting(containerEl)
-                .setName('OpenAPI source theme mode')
-                .setDesc('Select the theme mode for OpenAPI source mode')
+                .setName('Source theme mode')
+                .setDesc('Select the theme mode for source mode')
                 .addDropdown((dropdown: DropdownComponent) =>
                     dropdown
                         .addOptions({
@@ -33,16 +47,15 @@ const SourceSectionComponent: React.FC<{
                 );
 
             new Setting(containerEl)
-                .setName('Synchronize OpenAPI source theme')
+                .setName('Synchronize source theme')
                 .setDesc(
-                    'Synchronize OpenAPI source theme mode with Obsidian theme mode'
+                    'Synchronize source theme mode with Obsidian theme mode'
                 )
                 .addToggle((toggle) =>
                     toggle
-                        .setValue(plugin.settings.synchronizeOpenAPISourceTheme)
+                        .setValue(plugin.settings.syncOpenAPISourceTheme)
                         .onChange(async (value) => {
-                            plugin.settings.synchronizeOpenAPISourceTheme =
-                                value;
+                            plugin.settings.syncOpenAPISourceTheme = value;
                             await plugin.settingsManager.saveSettings();
                             plugin.publisher.publish({
                                 eventID: eventID.SourceThemeState,
@@ -53,7 +66,7 @@ const SourceSectionComponent: React.FC<{
                 );
 
             new Setting(containerEl)
-                .setName('OpenAPI source light theme')
+                .setName('Source light theme')
                 .setDesc('Select the light theme for OpenAPI source')
                 .addDropdown((dropdown) => {
                     dropdown
@@ -99,4 +112,4 @@ const SourceSectionComponent: React.FC<{
     return null;
 };
 
-export default SourceSectionComponent;
+export default SourceSubSection;

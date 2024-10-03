@@ -1,12 +1,23 @@
 import { App, Setting } from 'obsidian';
 import React, { useEffect } from 'react';
-import OpenAPIRendererPlugin from '../../../core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from '../../../core/openapi-renderer-plugin';
 import { eventID } from '../../../events-management/typing/constants';
 import { ChangeGridColumnsStateEvent } from '../../../events-management/typing/interfaces';
-import { SettingsContainer } from '../container-styled-component';
 import { useSettingsContext } from '../core/context';
+import { SettingsContainer } from '../styled/container-styled';
 
-const OpenAPIEntrySectionComponent: React.FC<{
+/**
+ * A React component that renders the OpenAPI Entry settings section.
+ *
+ * This component renders several settings:
+ *  - Grid Layout Columns
+ *
+ * @param {App} app - The Obsidian app instance.
+ * @param {OpenAPIRendererPlugin} plugin - The OpenAPI Renderer plugin instance.
+ *
+ * @returns {React.ReactElement} A React element.
+ */
+const OpenAPIEntrySection: React.FC<{
     app: App;
     plugin: OpenAPIRendererPlugin;
 }> = ({ app, plugin }) => {
@@ -16,21 +27,19 @@ const OpenAPIEntrySectionComponent: React.FC<{
         if (ref.current) {
             const containerEl = ref.current as HTMLElement;
             new Setting(containerEl)
-                .setName('Grid columns')
+                .setName('Grid Layout Columns')
                 .addDropdown((dropdown) => {
                     for (let i = 1; i < 6; i++) {
                         const n = i.toString();
                         dropdown.addOption(n, n);
                     }
                     dropdown.setValue(
-                        plugin.settings.OpenAPIEntryGridColumns.toString()
+                        plugin.settings.OpenAPIEntryGridLayoutColumns.toString()
                     );
                     dropdown.onChange(async (value) => {
                         dropdown.setValue(value);
-                        plugin.settings.OpenAPIEntryGridColumns = parseInt(
-                            value,
-                            10
-                        );
+                        plugin.settings.OpenAPIEntryGridLayoutColumns =
+                            parseInt(value, 10);
                         await plugin.settingsManager.saveSettings();
                         plugin.publisher.publish({
                             eventID: eventID.ChangeGridColumnsState,
@@ -48,4 +57,4 @@ const OpenAPIEntrySectionComponent: React.FC<{
     );
 };
 
-export default OpenAPIEntrySectionComponent;
+export default OpenAPIEntrySection;

@@ -1,4 +1,4 @@
-import OpenAPIRendererPlugin from 'core/OpenAPIRendererPlugin';
+import OpenAPIRendererPlugin from 'core/openapi-renderer-plugin';
 import { IconName, TextFileView, TFile, WorkspaceLeaf } from 'obsidian';
 import OpenAPIPreview from 'view/OpenAPI/components/preview/OpenAPI-preview';
 import { OpenAPISource } from 'view/OpenAPI/components/source/OpenAPI-source';

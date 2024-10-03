@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { RESOURCE_NAME } from '../../../typing/constants';
 import { OpenAPIVersionView } from '../../openapi-version-view';
 import { Specification } from '../../../../indexedDB/database/specification';
 import HtmlFormatter, {
@@ -80,8 +81,9 @@ const TwoPaneDiff: React.FC<TwoPaneProps> = ({ leftSpec, rightSpec, view }) => {
                 return;
             }
 
-            const diffCSS =
-                await view.plugin.resourceManager.getjsondiffpatchDiffCSS();
+            const diffCSS = await view.plugin.resourceManager.getCSS(
+                RESOURCE_NAME.DiffCSS
+            );
 
             const combinedHTML = `
                 <style>

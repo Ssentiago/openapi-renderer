@@ -3,6 +3,7 @@ export const enum RESOURCE_NAME {
     LightThemeCSS = 'swagger-ui-light.css',
     DarkThemeCSS = 'swagger-ui-dark.css',
     SwaggerBundle = 'swagger-ui-bundle.js',
+    DiffCSS = 'visual-diff.css',
 }
 
 export const enum RenderingMode {

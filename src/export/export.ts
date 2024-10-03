@@ -13,7 +13,7 @@ export default class Export {
      * @param {string} spec - The specification to be used for generating Swagger UI.
      * @return {string} The generated HTML for Swagger UI.
      */
-    renderSwaggerUIHtml(spec: string): string {
+    private renderSwaggerUIHtml(spec: string): string {
         return `
             <!doctype html>
 <html lang="en">
@@ -53,7 +53,9 @@ export default class Export {
      * @param {Specification[]} specs - An array of file specifications.
      * @return {renderData} An object containing the path, name, and data for the rendered Swagger UI.
      */
-    renderSwaggerUIHtmlForFileSpecs(specs: Specification[]): renderData {
+    private renderSwaggerUIHtmlForFileSpecs(
+        specs: Specification[]
+    ): renderData {
         const data = specs.reduce<specData[]>((htmlStrings, spec) => {
             const specString = spec.getPatchedVersion(specs).diff as string;
             const specData = {
@@ -77,7 +79,7 @@ export default class Export {
      * @param {Record<string, Specification[]>} specsData - An object containing an array of file specifications for each key.
      * @return {renderData[]} An array of objects containing the path, name, and data for the rendered Swagger UI for each file specification.
      */
-    renderSwaggerUIHtmlForFiles(
+    private renderSwaggerUIHtmlForFiles(
         specsData: Record<string, Specification[]>
     ): renderData[] {
         return Object.entries(specsData).map(([_, specs]) =>
@@ -119,7 +121,9 @@ export default class Export {
         }
     }
 
-    async handleSaveOneVersion(specData: OneFileVersionData): Promise<void> {
+    private async handleSaveOneVersion(
+        specData: OneFileVersionData
+    ): Promise<void> {
         let diff = specData.spec.getPatchedVersion(specData.specs)
             .diff as string;
         diff = this.renderSwaggerUIHtml(diff);
@@ -138,7 +142,10 @@ export default class Export {
      * @param {renderData} files - The renderData object containing the files to add.
      * @return {Promise<void>} A Promise that resolves when all files have been added.
      */
-    async addFilesToZip(zip: Yazl.ZipFile, files: renderData): Promise<void> {
+    private async addFilesToZip(
+        zip: Yazl.ZipFile,
+        files: renderData
+    ): Promise<void> {
         for (const file of files.data) {
             const version = file.version;
             const time = moment(file.time).format('YYYYMMDDHHmmss');
@@ -151,8 +158,8 @@ export default class Export {
         }
     }
 
-    async handleZip(data: renderData): Promise<void>;
-    async handleZip(data: renderData[]): Promise<void>;
+    private async handleZip(data: renderData): Promise<void>;
+    private async handleZip(data: renderData[]): Promise<void>;
 
     /**
      * Handles the creation and saving of a ZIP file from the given data.
@@ -160,7 +167,7 @@ export default class Export {
      * @param {renderData | renderData[]} data - The data to be added to the ZIP file.
      * @return {Promise<void>} A Promise that resolves when the ZIP file is saved.
      */
-    async handleZip(data: renderData | renderData[]): Promise<void> {
+    private async handleZip(data: renderData | renderData[]): Promise<void> {
         if (!Array.isArray(data)) {
             data = [data];
         }

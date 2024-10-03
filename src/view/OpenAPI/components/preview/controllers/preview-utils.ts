@@ -114,7 +114,7 @@ export class PreviewUtils {
             async () => {
                 if (
                     this.controller.preview.plugin.settings
-                        .synchronizeOpenAPIPreviewTheme
+                        .syncOpenAPIPreviewTheme
                 ) {
                     await this.controller.themeManager.syncWithObsidian();
                 }
@@ -125,7 +125,7 @@ export class PreviewUtils {
             plugin.app.workspace,
             eventID.PreviewThemeState,
             async () => {
-                if (plugin.settings.synchronizeOpenAPIPreviewTheme) {
+                if (plugin.settings.syncOpenAPIPreviewTheme) {
                     await this.controller.themeManager.syncWithObsidian();
                 } else {
                     const mode = plugin.settings.OpenAPIPreviewTheme;

@@ -1,5 +1,5 @@
 import { EventRef, Events } from 'obsidian';
-import OpenAPIPluginContext from '../core/contextManager';
+import OpenAPIRendererPlugin from '../core/openapi-renderer-plugin';
 
 import { eventID } from './typing/constants';
 import { ObserverEventData, OpenAPIRendererEvent } from './typing/interfaces';
@@ -8,11 +8,7 @@ import { ObserverEventData, OpenAPIRendererEvent } from './typing/interfaces';
  * Abstract class representing a Publisher.
  */
 abstract class Publisher {
-    appContext: OpenAPIPluginContext;
-
-    protected constructor(appContext: OpenAPIPluginContext) {
-        this.appContext = appContext;
-    }
+    constructor(public plugin: OpenAPIRendererPlugin) {}
 
     /**
      * Abstract method to publish an OpenAPI event.
@@ -27,9 +23,9 @@ abstract class Publisher {
 /**
  * Publisher for OpenAPI Renderer events.
  */
-export class OpenAPIRendererEventPublisher extends Publisher {
-    constructor(appContext: OpenAPIPluginContext) {
-        super(appContext);
+export class EventPublisher extends Publisher {
+    constructor(plugin: OpenAPIRendererPlugin) {
+        super(plugin);
     }
 
     /**
@@ -45,11 +41,9 @@ export class OpenAPIRendererEventPublisher extends Publisher {
  * Abstract class representing an Observer.
  */
 abstract class Observer {
-    appContext: OpenAPIPluginContext;
     protected subscriptions: Set<ObserverEventData>;
 
-    protected constructor(appContext: OpenAPIPluginContext) {
-        this.appContext = appContext;
+    protected constructor(public plugin: OpenAPIRendererPlugin) {
         this.subscriptions = new Set();
     }
 
@@ -77,11 +71,11 @@ abstract class Observer {
 /**
  * Observer for handling OpenAPI Renderer events.
  */
-export class OpenAPIRendererEventObserver extends Observer {
-    constructor(appContext: OpenAPIPluginContext) {
-        super(appContext);
+export class EventObserver extends Observer {
+    constructor(plugin: OpenAPIRendererPlugin) {
+        super(plugin);
         this.subscribe(
-            this.appContext.app.workspace,
+            this.plugin.app.workspace,
             eventID.PowerOff,
             this.onunload.bind(this)
         );

@@ -10,7 +10,7 @@ export const SettingsComponent: React.FC<{
     const { columnValue, setColumnValue } = useEntryContext();
 
     useEffect(() => {
-        setColumnValue(view.plugin.settings.OpenAPIEntryGridColumns);
+        setColumnValue(view.plugin.settings.OpenAPIEntryGridLayoutColumns);
         view.plugin.observer.subscribe(
             view.app.workspace,
             eventID.ChangeGridColumnsState,

@@ -1,4 +1,4 @@
-import { EntryViewData } from 'indexedDB/interfaces';
+import { EntryViewData } from 'indexedDB/typing/interfaces';
 import React, { useEffect } from 'react';
 
 import { eventID } from '../../../../events-management/typing/constants';
